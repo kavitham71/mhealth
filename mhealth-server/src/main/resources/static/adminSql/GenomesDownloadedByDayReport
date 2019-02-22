@@ -1,0 +1,2 @@
+select trunc(genome_date) as "Day", count(1) as "Genomes Downloaded" from tm_user_info
+where genome_date is not null group by trunc(genome_date) order by 1;

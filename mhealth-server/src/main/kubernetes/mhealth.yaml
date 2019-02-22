@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhealth-deployment
+  labels:
+    app: mhealth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mhealth
+  template:
+    metadata:
+      labels:
+        app: mhealth
+    spec:
+      volumes:
+        - name: mhealth-conf
+          secret:
+            secretName: mhealth-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      containers:
+      - name: mhealth
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        image: gcr.io/som-rit-mhealth-dev/mhealth
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: mhealth-conf
+            mountPath: /app/conf/
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-mhealth-dev:us-central1:mhealth-platform-testing=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mhealth
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: mhealth

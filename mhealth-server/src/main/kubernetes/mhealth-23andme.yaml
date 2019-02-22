@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhealth-23andme-deployment
+  labels:
+    app: mhealth-23andme
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mhealth-23andme
+  template:
+    metadata:
+      labels:
+        app: mhealth-23andme
+    spec:
+      volumes:
+        - name: mhealth-23andme-conf
+          secret:
+            secretName: mhealth-23andme-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      containers:
+      - name: mhealth-23andme
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        image: gcr.io/som-rit-mhealth-dev/mhealth-23andme
+        ports:
+        - containerPort: 8001
+        volumeMounts:
+         - name: mhealth-23andme-conf
+           mountPath: /app/conf/
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-mhealth-dev:us-central1:mhealth-platform-testing=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: mhealth-23andme-network-policies
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      app: mhealth-23andme
+  egress:
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+            - 10.20.0.0/14
+            - 10.87.0.0/20
+    - ports:
+      - port: 53
+        protocol: TCP
+      - port: 53
+        protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mhealth-23andme
+spec:
+  type: NodePort
+  ports:
+  - port: 8001
+    targetPort: 8001
+  selector:
+    app: mhealth-23andme

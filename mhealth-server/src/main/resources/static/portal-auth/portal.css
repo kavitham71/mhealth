@@ -1,0 +1,9 @@
+#error {
+  color: red;
+}
+
+/* For the navbar to work */
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+}

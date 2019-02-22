@@ -1,0 +1,71 @@
+
+
+.user-display-name {
+  font-weight: bolder;
+}
+
+/* this is for the main container of the table, also sets the height of the fixed header row */
+.headercontainer {
+  overflow-x: auto;
+  border: 1px solid #222;
+  padding-top: 37px;
+  background: #000;
+  width:100%
+}
+/* this is for the data area that is scrollable */
+.tablecontainer {
+  overflow-y: auto;
+  overflow-x: auto;
+  height: 200px;
+  background: #fff;
+}
+
+/* remove default cell borders and ensures table width 100% of its container*/
+.tablecontainer table {
+  border-spacing: 0;
+  width:100%;
+}
+
+/* add a thin border to the left of cells, but not the first */
+.tablecontainer td + td {
+  border-left:1px solid #eee;
+}
+
+
+/* make the default header height 0 and make text invisible */
+.tablecontainer th {
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 0;
+    visibility: hidden;
+    white-space: nowrap;
+}
+
+/* reposition the divs in the header cells and place in the blank area of the headercontainer */
+.tablecontainer th div{
+  visibility: visible;
+  overflow-x: auto;
+  background: #000;
+  color: #fff;
+  padding: 9px 10px;
+  top: 0;
+  width:100%;
+  line-height: normal;
+  border-left: 1px solid #222;
+}
+
+/* prevent the left border from above appearing in first div header */
+th:first-child div{
+  border: none;
+}
+
+/* alternate colors for rows */
+.tablecontainer tbody  tr:nth-child(even){
+     background-color: #ddd;
+}
+/* For the navbar to work */
+body {
+  min-height: 2000px;
+  padding-top: 70px;
+}

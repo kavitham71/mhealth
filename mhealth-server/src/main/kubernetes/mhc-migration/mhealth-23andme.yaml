@@ -1,0 +1,206 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhealth-23andme-batch-enabled-deployment
+  labels:
+    app: mhealth-23andme
+    batch: enabled
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mhealth-23andme
+  template:
+    metadata:
+      labels:
+        app: mhealth-23andme
+        batch: enabled
+    spec:
+      volumes:
+        - name: mhealth-23andme-batch-enabled-conf
+          secret:
+            secretName: mhealth-23andme-batch-enabled-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: mhc-app-poll-log
+          emptyDir: {}
+        - name: mhc-fluentd-config
+          configMap:
+            name: mhc-fluentd-config
+      containers:
+      - name: 23andme-prod
+        image: gcr.io/som-rit-phi-mhealth-prod/mhealth-23andme:log4j
+        env:
+        - name: APP_PROPERTIES_BATCH_ENABLED_HASH
+          value: ${APP_PROPERTIES_BATCH_ENABLED_HASH}
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        ports:
+        - containerPort: 8001
+        volumeMounts:
+         - name: mhealth-23andme-batch-enabled-conf
+           mountPath: /app/conf/
+         - name: mhc-app-poll-log
+           mountPath: /app/logs
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.13
+        env:
+        - name: CLOUDSQL_SERVICE_ACCOUNT_HASH
+          value: ${CLOUDSQL_SERVICE_ACCOUNT_HASH}
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-phi-mhealth-prod:us-west1:mhealth-db=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json",
+                  "-ip_address_types=PRIVATE"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      - name: mhc-batch-enabled-fluentd
+        image: k8s.gcr.io/fluentd-gcp:1.30
+        env:
+        - name: FLUENTD_ARGS
+          value: -c /etc/fluentd-config/fluentd.conf
+        - name: FLUENTD_CONFIG_HASH
+          value: ${FLUENTD_CONFIG_HASH}
+        volumeMounts:
+        - name: mhc-app-poll-log
+          mountPath: /app/logs
+        - name: mhc-fluentd-config
+          mountPath: /etc/fluentd-config
+      nodeSelector:
+        batch: enabled
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhealth-23andme-batch-disabled-deployment
+  labels:
+    app: mhealth-23andme
+    batch: disabled
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mhealth-23andme
+  template:
+    metadata:
+      labels:
+        app: mhealth-23andme
+        batch: disabled
+    spec:
+      volumes:
+        - name: mhealth-23andme-batch-disabled-conf
+          secret:
+            secretName: mhealth-23andme-batch-disabled-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: mhc-app-poll-log
+          emptyDir: {}
+        - name: mhc-fluentd-config
+          configMap:
+            name: mhc-fluentd-config
+      containers:
+      - name: 23andme-prod
+        image: gcr.io/som-rit-phi-mhealth-prod/mhealth-23andme:log4j
+        env:
+        - name: APP_PROPERTIES_BATCH_DISABLED_HASH
+          value: ${APP_PROPERTIES_BATCH_DISABLED_HASH}
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        ports:
+        - containerPort: 8001
+        volumeMounts:
+         - name: mhealth-23andme-batch-disabled-conf
+           mountPath: /app/conf/
+         - name: mhc-app-poll-log
+           mountPath: /app/logs
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.13
+        env:
+        - name: CLOUDSQL_SERVICE_ACCOUNT_HASH
+          value: ${CLOUDSQL_SERVICE_ACCOUNT_HASH}
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-phi-mhealth-prod:us-west1:mhealth-db=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json",
+                  "-ip_address_types=PRIVATE"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      - name: mhc-batch-disabled-fluentd
+        image: k8s.gcr.io/fluentd-gcp:1.30
+        env:
+        - name: FLUENTD_ARGS
+          value: -c /etc/fluentd-config/fluentd.conf
+        - name: FLUENTD_CONFIG_HASH
+          value: ${FLUENTD_CONFIG_HASH}
+        volumeMounts:
+        - name: mhc-app-poll-log
+          mountPath: /app/logs
+        - name: mhc-fluentd-config
+          mountPath: /etc/fluentd-config
+      nodeSelector:
+        batch: disabled
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: mhealth-23andme-network-policies
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      app: mhealth-23andme
+  egress:
+    - to:
+      - ipBlock:
+          cidr: 0.0.0.0/0
+          except:
+            - 10.4.0.0/14
+            - 10.0.32.0/20
+    - ports:
+      - port: 53
+        protocol: TCP
+      - port: 53
+        protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mhealth-23andme
+spec:
+  type: NodePort
+  ports:
+  - port: 9090
+    targetPort: 8001
+  selector:
+    app: mhealth-23andme

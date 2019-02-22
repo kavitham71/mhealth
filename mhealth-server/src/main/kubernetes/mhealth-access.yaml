@@ -1,0 +1,78 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mhealth-access-deployment
+  labels:
+    app: mhealth-access
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mhealth-access
+  template:
+    metadata:
+      labels:
+        app: mhealth-access
+    spec:
+      volumes:
+        - name: mhealth-access-conf
+          secret:
+            secretName: mhealth-access-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      containers:
+      - name: mhealth-access
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8007
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8007
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        image: gcr.io/som-rit-mhealth-dev/mhealth-access
+        ports:
+        - containerPort: 8007
+        volumeMounts:
+         - name: mhealth-access-conf
+           mountPath: /app/conf/
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-mhealth-dev:us-central1:mhealth-platform-testing=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+---
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  name: mhealth-access-backend-config
+spec:
+  securityPolicy:
+    name: "ca-mhealth-access-security-policy"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mhealth-access
+  annotations:
+    beta.cloud.google.com/backend-config: '{"ports": {"8007":"mhealth-access-backend-config"}}'
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8007
+    targetPort: 8007
+  selector:
+    app: mhealth-access

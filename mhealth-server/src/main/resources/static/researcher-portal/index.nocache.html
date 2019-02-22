@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>mHealth Researcher Portal</title>
+  <link rel="icon" type="image/ico" href="data:image/ico;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wDa2vAkgYHMtWxsxJPw8PkM////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wCiotpaCgqd8z8/sv8AAJn/ICCl3szM6jH///8A////AP///wD///8A////AP///wD///8A////AP///wCGhs53AACZ/wAAmf8/P7L/AACZ/wAAmf8KCp31vLzkQf///wD///8A////AP///wD///8A////AP///wCiotpaISGm/S8vrP8vL6z/Pz+y/wAAmf8AAJn/Cwud/xsbo/DU1O4p////AP///wD///8A////AP///wDe3vIfDAyd83xwy/+kjtz/wrPn/z8/sv8AAJn/AACZ/1pavf9ISLb/MDCsz/r6/QP///8A////AP///wD///8AWFi8pk5MuP+biNj/jG/S/5uD2P8/P7L/AACZ/wAAmf9FRbT/mprW/wwMnf+YmNZl////AP///wD///8A4ODyHQQEmvxmZML/tKLi/7yr5f93dcj/Pz+y/wAAmf8QEJ//nZ3Y/3Z2yP8AAJn/Jiao2f///wD///8A////AIqK0HIAAJn/VFK7/2tTxf+Xidb/Jiao/z8/sv8AAJn/Jiao/6ys3v8wMKz/AACZ/wAAmf/Kyuoy////AP///wBiYr+1ICCl/yAgpf8gIKX/ICCl/yAgpf9XV7z/AACZ/wAAmf9KSrb/k5PU/ywsqv8AAJn/iIjPdf///wD///8AQkKz4jMzrf9SUrr/d3fJ/0lJtv8vL6z/Y2PA/wAAmf8AAJn/PDyx/2NjwP9nZ8L/AACZ/1xcvaH///8A////AAUFmv1kZMH/ysrp/9XV7v+2tuH/NDSu/z8/sv8AAJn/AACZ/29vxf+np9v/BASa/wAAmf9CQrO9////AP///wAGBpv/m5vX/4eHz//u7vj/Tk64/5eX1f8/P7L/AACZ/ywsqv+qqt3/QECy/wAAmf8AAJn/QECyv////wD///8AAgKZ/QAAmf9ra8T/3d3x/ykpqf8CApn/Pz+y/wcHm/+JidD/MDCs/1dXvP8AAJn/AACZ/0BAsr3///8A////ABgYouUAAJn/Wlq9/9/f8v8XF6L/AACZ/z8/sv8UFKH/kZHT/6el3P9iYsD/AACZ/wAAmf9YWLym////AP///wBCQrO9AACZ/yMjp/+vr9//BASa/wAAmf8/P7L/AACZ/wAAmf8ICJz/AACZ/wAAmf8AAJn/goLNff///wD///8Ajo7ScCAgpd4gIKXeS0u33iAgpd4gIKXeV1e73iAgpd4gIKXeICCl3iAgpd4gIKXeICCl3sbG6Dj///8A/n8AAPw/AAD4HwAA8A8AAOAHAADABwAAwAMAAMADAACAAwAAgAEAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAA=="/>
+  <link href="assets/css/bootstrap-3.3.6.min.cache.css" rel="stylesheet">
+  <link rel="stylesheet" href="portal.css"/>
+  <style>
+    .user-display-name {
+      font-weight: bolder;
+    }
+    /* For the navbar to work
+    body {
+      padding-top: 70px;
+    }
+  </style>
+  <!-- If you want a favicon: -->
+  <!--<link rel="icon" type="image/ico" href="data:image/ico;base64,..."/>-->
+</head>
+<body>
+
+<noscript>
+  <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+    Your web browser must have JavaScript enabled
+    in order for this application to display correctly.
+  </div>
+</noscript>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">mHealth Researcher Portal</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="show-if-noauth" style="display:none"><a id="loginButton" href="#">Login</a></li>
+        <li class="dropdown show-if-auth" style="display:none">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false"><span class="user-display-name"></span> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a id="logoutButton" href="#">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+<div class="jumbotron" id="researchContainer">
+  <ul class="nav nav-tabs" role="tablist" >
+    <li role="presentation"><a href="#adminTab" aria-controls="adminTab" role="tab" data-toggle="tab">Admin</a></li>
+    <li role="presentation"><a href="#genePoolUsers" aria-controls="genePoolUsers" role="tab" data-toggle="tab">GenePool Participants</a></li>
+    <li role="presentation"><a href="#adminReports" aria-controls="adminReports" role="tab" data-toggle="tab">Admin Reports</a></li>
+    <li role="presentation"><a href="#studies" aria-controls="studies" role="tab" data-toggle="tab">Research Studies</a></li>
+    <li role="presentation"><a href="#reportPage" aria-controls="reportPage" role="tab" data-toggle="tab">Report</a></li>
+  </ul>
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="adminTab">
+  <h4>As an admin you have access to following functions</h4>
+      <table id="adminTable"></table>
+
+    </div>
+
+
+      <div role="tabpanel" class="tab-pane" id="genePoolUsers" >
+
+        <p>This will display the PHI information regarding the latest to oldest GenePool participants. </p>
+        <p>The only verified information is the email address, rest of the information is not verified.</p>
+
+        <p id="errorGettingGenePoolParticipants"></p>
+
+        <form action="javascript:void(0);">
+          <div class="headercontainer">
+          <div class="tablecontainer">
+            <table id="genepoolTable">
+              <tr id="genepoolHeader">
+                <th>Name
+                <div>Name</div></th>
+                <th>BirthDate
+                <div>BirthDate</div></th>
+                <th>MRN
+                <div>MRN</div></th>
+                <th>Email
+                <div>Email</div></th>
+                <th>Status
+                <div>Status</div></th>
+                <th colspan="2">Action
+                  <div>Action</div></th>
+              </tr>
+            </table>
+          </div>
+           </div>
+          <button id= genePoolButton class="btn btn-lg btn-primary" type="submit" onClick="genePoolParticipants(gpg)">Get GenePool Participants</button>
+          <button id= previousButton class="btn btn-lg btn-primary" style="display:none" type="submit" onClick="genePoolParticipants(--gpg)">Previous GenePool Participants</button>
+          <button id= nextButton class="btn btn-lg btn-primary" style="display:none" type="submit" onClick="genePoolParticipants(++gpg)">Next GenePool Participants</button>
+        </form>
+      </div>
+
+    <div role="tabpanel" class="tab-pane" id="adminReports" >
+      <h3>Admin Reports</h3>
+
+      <p>This page displays buttons to get various admin reports </p>
+
+      <form action="javascript:void(0);" onsubmit="getAdminReports()">
+        <div class="headercontainer">
+          <div class="tablecontainer">
+            <table id="reportsTable" >
+              <tr id="reportsHeader">
+                <th>reports
+                  <div>reports</div></th>
+                <th colspan="2">Action
+                  <div>Action</div></th>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <button id= reportButton class="btn btn-lg btn-primary" type="submit">Get Admin Report</button>
+      </form>
+    </div>
+
+    <div role="tabpanel" class="tab-pane" id="reportPage" >
+      <div id="report">
+
+      </div>
+
+    </div>
+
+
+    <div role="tabpanel" class="tab-pane" id="studies">
+        <h3>Research Studies</h3>
+
+        <p>These are the available research studies </p>
+        <p id="studiesError"></p>
+
+        <div id="dialog" title="Api Token" modal="true"></div>
+
+        <form action="javascript:void(0);">
+          <div class="headercontainer">
+          <div class="tablecontainer">
+            <table id="studyTable">
+              <tr id="studyHeader">
+                <th>studyId
+                <div>studyId</div></th>
+                <th>shortName
+                <div>shortName</div></th>
+                <th>displayName
+                <div>displayName</div></th>
+                <th>apiToken
+                <div>apiToken</div></th>
+                <th>expiryTime
+                  <div>expiryTime</div></th>
+                <th colspan="2">Action
+                  <div>Action</div></th>
+              </tr>
+            </table>
+          </div>
+          </div>
+          <button id= studiesNextButton class="btn btn-lg btn-primary" style="display:none" onClick="getStudies(spg)">Next Research Studies</button>
+        </form>
+      </div>
+  </div>
+  </div>
+</div>
+
+
+<script src="assets/js/jquery-2.2.4.min.cache.js"></script>
+<script src="assets/js/bootstrap-3.3.6.min.cache.js"></script>
+<script src="assets/js/security.js"></script>
+<script type="application/javascript">
+var gpg = 1;
+var spg = 1;
+var pageSize = 1;
+var researchStudies = {};
+var tabs;
+
+$(function() {
+   var body = {};
+   body.pg = spg;
+    tab = document.getElementsByClassName("nav nav-tabs");
+    tabs = tab[0].children;
+    for (i = 0; i < tabs.length; i++) {
+        tabs[i].style.display = "none";
+    }
+      $.ajax({
+      url: "api/v1/studies",
+      method: "POST",
+      data: JSON.stringify(body),
+      dataType: "json"
+    }).done(function(result) {
+      if (result.action == "success") {
+      researchStudies = result;
+        if(result.genePoolAdmin) {
+        var trHTML = '';
+        tabs[0].style.display = "inline";
+        trHTML = $("<td style=display: block; text-align: left; margin: auto>").append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text('Get GenePool Participants').click(function() {
+            showParticipants();
+            }))
+            .append($("</button>")).append($("</td>")).append($("</tr>"));
+         trHTML.append($("<td style=display: block; text-align: left; margin: auto>")).append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text('Get Admin Reports').click(function() {
+            showAdminReports();
+            }))
+            .append($("</button>")).append($("</td>")).append($("</tr>"));
+         trHTML.appendTo("#adminTable");
+         $('a[href="#adminTab"]').click();
+        }
+        if(result.studies.length > 0) {
+        tabs[3].style.display = "inline";
+        getResearchStudies();
+        }
+        if(!result.genePoolAdmin && result.studies.length > 0) {
+        $('a[href="#studies"]').click();
+        }
+       }
+    });
+});
+
+
+function getStudies(spg) {
+   var body = {};
+   body.pg = spg;
+    $("#studiesNextButton").hide();
+   $.ajax({
+      url: "api/v1/studies",
+      method: "POST",
+      data: JSON.stringify(body),
+      dataType: "json"
+    }).done(function(result) {
+      if (result.action == "success") {
+        var trHTML = '';
+        $("#studiesButton").hide();
+        $("#genepoolTable td").parent().remove();
+        $("#studiesNextButton").hide();
+        researchStudies = result;
+         $.each(researchStudies.studies, function (i, item) {
+        trHTML =  $("<tr>").append($("<td id=cell"+i+"1>").text(researchStudies.studies[i].studyId))
+             .append($("</td>")).append($("<td id=cell"+i+"2>").text(researchStudies.studies[i].shortName))
+             .append($("</td>")).append($("<td id=cell"+i+"3>").text(researchStudies.studies[i].displayName))
+             .append($("</td>")).append($("<td id=cell"+i+"4>").text(""))
+             .append($("</td>")).append($("<td id=cell"+i+"5>").text(""))
+             .append($("</td>"));
+            trHTML.append($("<td style=display: block; text-align: left; margin: auto>")).append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text('Create/Replace Api Token').click(function() {
+            getApiToken($(this),researchStudies.studies[i].studyId,i);
+            }))
+            .append($("</button>")).append($("</td>")).append($("</tr>"));
+           trHTML.appendTo("#studyTable");
+        });
+        if(researchStudies.meta.nextPage) {
+            spg++;
+            $("#studiesNextButton").show();
+          }
+
+        }
+    });
+}
+
+function showParticipants() {
+ tab = document.getElementsByClassName("nav nav-tabs");
+ tabs = tab[0].children;
+ tabs[1].style.display = "inline";
+  $('a[href="#genePoolUsers"]').click();
+}
+
+function showAdminReports() {
+ tab = document.getElementsByClassName("nav nav-tabs");
+ tabs = tab[0].children;
+ tabs[2].style.display = "inline";
+ $('a[href="#adminReports"]').click();
+}
+
+
+
+  function genePoolParticipants(gpg) {
+   var body = {};
+   body.pg = gpg;
+   body.pageSize = pageSize;
+      $.ajax({
+      url: "api/v1/genepool/participants",
+      method: "POST",
+      data: JSON.stringify(body),
+      dataType: "json"
+    }).done(function(result) {
+      if (result.action == "success") {
+        var trHTML = '';
+        $("#genePoolButton").hide();
+        $("#genepoolTable td").parent().remove();
+        $("#nextButton").hide();
+        $("#previousButton").hide();
+        $.each(result.participants, function (i, item) {
+        trHTML =  $("<tr>").append($("<td>").text(result.participants[i].name))
+            .append($("</td>")).append($("<td>").text(result.participants[i].birthDate))
+             .append($("</td>")).append($("<td>").text(result.participants[i].mrn))
+             .append($("</td>")).append($("<td>").text(result.participants[i].email))
+             .append($("</td>")).append($("<td>").text(result.participants[i].status))
+             .append($("</td>"));
+         if(result.participants[i].status == null) {
+            trHTML.append($("<td>")).append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text('Order Blood Draw').click(function() {
+            updateStatus(result.participants[i].userId,'ordered',$(this));
+            }))
+            .append($("</button>")).append($("</td>")).append($("</tr>"));
+            }
+         if(result.participants[i].status == "ordered") {
+           trHTML.append($("<td>")).append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text(' Blood Draw Complete').click(function() {
+            updateStatus(result.participants[i].userId,'completed',$(this));
+            }))
+            .append($("</button>")).append($("</td>")).append($("</tr>"));
+            }
+           trHTML.appendTo("#genepoolTable");
+        });
+        if(result.nextPage) {
+            $("#nextButton").show();
+          }
+         if(gpg > 1) {
+            $("#previousButton").show();
+          }
+        }}).fail(function(jqxhr, status, error) {
+      alert("Unable to communicate with the server\n\n" + error);
+    });
+    }
+
+
+    function getResearchStudies() {
+     var trHTML = '';
+     $("#studiesButton").hide();
+        $("#genepoolTable td").parent().remove();
+        $("#studiesNextButton").hide();
+        $.each(researchStudies.studies, function (i, item) {
+
+        trHTML =  $("<tr>").append($("<td id=cell"+i+"1>").text(researchStudies.studies[i].studyId))
+             .append($("</td>")).append($("<td id=cell"+i+"2>").text(researchStudies.studies[i].shortName))
+             .append($("</td>")).append($("<td id=cell"+i+"3>").text(researchStudies.studies[i].displayName))
+             .append($("</td>")).append($("<td id=cell"+i+"4>").text(""))
+             .append($("</td>")).append($("<td id=cell"+i+"5>").text(""))
+             .append($("</td>"));
+            trHTML.append($("<td style=display: block; text-align: left; margin: auto>")).append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text('Create/Replace Api Token').click(function() {
+            getApiToken($(this),researchStudies.studies[i].studyId,i);
+            }))
+            .append($("</button>")).append($("</td>")).append($("</tr>"));
+           trHTML.appendTo("#studyTable");
+        });
+        if(researchStudies.meta.nextPage) {
+            spg++;
+            $("#studiesNextButton").show();
+          }
+
+     }
+
+     function getAdminReports() {
+     var trHTML = '';
+     $("#reportButton").hide();
+     $.ajax({
+      url: "api/v1/getReports",
+      method: "GET",
+      dataType: "json"
+    }).done(function(result) {
+      if (result.action == "success") {
+        $.each(result.files, function (i, item) {
+            trHTML = $("<tr>").append($("<td>").text(result.files[i])).append($("</td>")).append($("<td style=display: block; text-align: left; margin: auto>")).append($("<button>").prop("type", "button").prop("class","btn btn-small btn-success").text('Get Report').click(function() {
+            getAdminReport(result.files[i]);
+            })).append($("</button>")).append($("</td>")).append($("</tr>"));
+           trHTML.appendTo("#reportsTable");
+           });
+     }}).fail(function(jqxhr, status, error) {
+      alert("Unable to communicate with the server\n\n" + error);
+    });
+}
+
+
+    function getApiToken(object,studyId,index) {
+  var body = {};
+      body.studyId = studyId;
+      $.ajax({
+      url: "api/v1/token/issue",
+      method: "POST",
+      data: JSON.stringify(body),
+      dataType: "json"
+    }).done(function(result) {
+      if (result.action == "success") {
+       $("#cell"+index+"4").text(result.token);
+       $("#cell"+index+"5").text(result.validTo);
+    }}).fail(function(jqxhr, status, error) {
+      alert("Unable to communicate with the server\n\n" + error);
+    });
+}
+
+
+ function getAdminReport(file) {
+      $('a[href="#reportPage"]').click();
+      $("#report").load("/researcher/api/v1/getReport/"+file);
+   ;
+}
+
+
+
+    function updateStatus(userId,status,object) {
+    var body = {};
+    body.userId = userId;
+    body.status = status;
+      $.ajax({
+      url: "api/v1/genepool/status/update",
+      method: "POST",
+      data: JSON.stringify(body),
+      dataType: "json"
+    }).done(function(result) {
+      if (result.action == "success") {
+       alert("Successfully updated status");
+       object.prop("disabled",true);
+    }}).fail(function(jqxhr, status, error) {
+      alert("Unable to communicate with the server\n\n" + error);
+    });
+}
+
+
+</script>
+</body>
+</html>

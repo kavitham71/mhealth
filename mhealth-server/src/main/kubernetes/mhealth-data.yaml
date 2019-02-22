@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mhealth-data-deployment
+  labels:
+    app: mhealth-data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mhealth-data
+  template:
+    metadata:
+      labels:
+        app: mhealth-data
+    spec:
+      volumes:
+        - name: mhealth-data-conf
+          secret:
+            secretName: mhealth-data-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      containers:
+      - name: mhealth-data
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8006
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8006
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        image: gcr.io/som-rit-mhealth-dev/mhealth-data
+        ports:
+        - containerPort: 8006
+        volumeMounts:
+          - name: mhealth-data-conf
+            mountPath: /app/conf/
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-mhealth-dev:us-central1:mhealth-platform-testing=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+---
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  name: mhealth-data-backend-config
+spec:
+  securityPolicy:
+    name: "ca-mhealth-data-security-policy"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mhealth-data
+  annotations:
+    beta.cloud.google.com/backend-config: '{"ports": {"8006":"mhealth-data-backend-config"}}'
+spec:
+  type: NodePort
+  ports:
+  - port: 8006
+    targetPort: 8006
+  selector:
+    app: mhealth-data

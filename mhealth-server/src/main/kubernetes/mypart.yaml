@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mypart-deployment
+  labels:
+    app: mypart
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mypart
+  template:
+    metadata:
+      labels:
+        app: mypart
+    spec:
+      volumes:
+        - name: mypart-conf
+          secret:
+            secretName: mypart-secrets
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      containers:
+      - name: mypart
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8003
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8003
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        image: gcr.io/som-rit-mhealth-dev/mypart
+        ports:
+        - containerPort: 8003
+        - containerPort: 8002
+        volumeMounts:
+         - name: mypart-conf
+           mountPath: /app/conf/
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=som-rit-mhealth-dev:us-central1:mhealth-platform-testing=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+        securityContext:
+          runAsUser: 2  # non-root user
+          allowPrivilegeEscalation: false
+        volumeMounts:
+          - name: cloudsql-instance-credentials
+            mountPath: /secrets/cloudsql
+            readOnly: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mypart
+spec:
+  type: NodePort
+  ports:
+  - name: participant-beta
+    port: 8003
+    targetPort: 8003
+  - name: server-beta
+    port: 8002
+    targetPort: 8002
+  selector:
+    app: mypart

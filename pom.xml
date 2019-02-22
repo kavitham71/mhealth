@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.github.susom</groupId>
+  <artifactId>mhealth</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>An mHealth Platform for collecting device data</description>
+  <url>https://github.com/susom/mhealth</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>irt</id>
+      <url>https://irt-maven.stanford.edu/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>irt</id>
+      <url>https://irt-maven.stanford.edu/nexus/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.4</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>package</phase>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  <modules>
+    <module>mhealth-server</module>
+  </modules>
+</project>

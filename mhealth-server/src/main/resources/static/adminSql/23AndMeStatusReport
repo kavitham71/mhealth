@@ -1,0 +1,7 @@
+select case when download_status = 'Y' then 'Downloaded'
+            when pending_error_msg is not null then 'Pending - ' || pending_error_msg
+            when download_error_msg is not null then 'Failed - ' || download_error_msg end as "Status",
+       count(*) as "Count"
+from tm_user_info group by case when download_status = 'Y' then 'Downloaded'
+            when pending_error_msg is not null then 'Pending - ' || pending_error_msg
+            when download_error_msg is not null then 'Failed - ' || download_error_msg end order by 2 desc;

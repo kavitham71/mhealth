@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>My Sample Study</title>
+  <link href="assets/css/bootstrap-3.3.6.min.cache.css" rel="stylesheet">
+  <link rel="stylesheet" href="mystudy.css"/>
+  <link rel="icon" type="image/ico" href="data:image/ico;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD///8A////AP///wD///8A////AP///wDa2vAkgYHMtWxsxJPw8PkM////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wCiotpaCgqd8z8/sv8AAJn/ICCl3szM6jH///8A////AP///wD///8A////AP///wD///8A////AP///wCGhs53AACZ/wAAmf8/P7L/AACZ/wAAmf8KCp31vLzkQf///wD///8A////AP///wD///8A////AP///wCiotpaISGm/S8vrP8vL6z/Pz+y/wAAmf8AAJn/Cwud/xsbo/DU1O4p////AP///wD///8A////AP///wDe3vIfDAyd83xwy/+kjtz/wrPn/z8/sv8AAJn/AACZ/1pavf9ISLb/MDCsz/r6/QP///8A////AP///wD///8AWFi8pk5MuP+biNj/jG/S/5uD2P8/P7L/AACZ/wAAmf9FRbT/mprW/wwMnf+YmNZl////AP///wD///8A4ODyHQQEmvxmZML/tKLi/7yr5f93dcj/Pz+y/wAAmf8QEJ//nZ3Y/3Z2yP8AAJn/Jiao2f///wD///8A////AIqK0HIAAJn/VFK7/2tTxf+Xidb/Jiao/z8/sv8AAJn/Jiao/6ys3v8wMKz/AACZ/wAAmf/Kyuoy////AP///wBiYr+1ICCl/yAgpf8gIKX/ICCl/yAgpf9XV7z/AACZ/wAAmf9KSrb/k5PU/ywsqv8AAJn/iIjPdf///wD///8AQkKz4jMzrf9SUrr/d3fJ/0lJtv8vL6z/Y2PA/wAAmf8AAJn/PDyx/2NjwP9nZ8L/AACZ/1xcvaH///8A////AAUFmv1kZMH/ysrp/9XV7v+2tuH/NDSu/z8/sv8AAJn/AACZ/29vxf+np9v/BASa/wAAmf9CQrO9////AP///wAGBpv/m5vX/4eHz//u7vj/Tk64/5eX1f8/P7L/AACZ/ywsqv+qqt3/QECy/wAAmf8AAJn/QECyv////wD///8AAgKZ/QAAmf9ra8T/3d3x/ykpqf8CApn/Pz+y/wcHm/+JidD/MDCs/1dXvP8AAJn/AACZ/0BAsr3///8A////ABgYouUAAJn/Wlq9/9/f8v8XF6L/AACZ/z8/sv8UFKH/kZHT/6el3P9iYsD/AACZ/wAAmf9YWLym////AP///wBCQrO9AACZ/yMjp/+vr9//BASa/wAAmf8/P7L/AACZ/wAAmf8ICJz/AACZ/wAAmf8AAJn/goLNff///wD///8Ajo7ScCAgpd4gIKXeS0u33iAgpd4gIKXeV1e73iAgpd4gIKXeICCl3iAgpd4gIKXeICCl3sbG6Dj///8A/n8AAPw/AAD4HwAA8A8AAOAHAADABwAAwAMAAMADAACAAwAAgAEAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAA=="/>
+</head>
+<body>
+
+<noscript>
+  <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+    Your web browser must have JavaScript enabled
+    in order for this application to display correctly.
+  </div>
+</noscript>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Sample Study Portal</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <!--<li class="active"><a href="#">Login</a></li>-->
+        <!--<li><a href="#about">About</a></li>-->
+        <!--<li><a href="#contact">Contact</a></li>-->
+        <!--<li class="dropdown">-->
+          <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
+          <!--<ul class="dropdown-menu">-->
+            <!--<li><a href="#">Action</a></li>-->
+            <!--<li><a href="#">Another action</a></li>-->
+            <!--<li><a href="#">Something else here</a></li>-->
+            <!--<li role="separator" class="divider"></li>-->
+            <!--<li class="dropdown-header">Nav header</li>-->
+            <!--<li><a href="#">Separated link</a></li>-->
+            <!--<li><a href="#">One more separated link</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="show-if-noauth" style="display:none"><a id="loginButton" href="#">Login</a></li>
+        <!--<li class="show-if-noauth" style="display:none">You have not logged in yet.-->
+          <!--<button id="loginButton" class="btn">Login</button></li>-->
+
+        <li class="dropdown show-if-auth" style="display:none">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+             aria-expanded="false"><span class="user-display-name"></span> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a id="logoutButton" href="#">Logout</a></li>
+            <!--<li><a href="#">Another action</a></li>-->
+            <!--<li><a href="#">Something else here</a></li>-->
+            <!--<li role="separator" class="divider"></li>-->
+            <!--<li class="dropdown-header">Nav header</li>-->
+            <!--<li><a href="#">Separated link</a></li>-->
+            <!--<li><a href="#">One more separated link</a></li>-->
+          </ul>
+        </li>
+        <!--<li class="show-if-auth" style="display:none">You are logged in as <span class="user-display-name"></span>.-->
+          <!--<button id="logoutButton" class="btn">Logout</button></li>-->
+        <!--<li><a href="../navbar/">Default</a></li>-->
+        <!--<li><a href="../navbar-static-top/">Static top</a></li>-->
+        <!--<li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li>-->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="jumbotron">
+    <!--<h3>Sample Study Site</h3>-->
+
+    <p>This is a sample showing how a study site might authenticate
+       subjects using the central research portal.</p>
+
+    <h3>Dynamic Public Content</h3>
+
+    <p>Content from the server:</p>
+    <p id="public"></p>
+
+    <h3>Dynamic Secret Content</h3>
+
+    <button id="secretButton" class="btn btn-lg btn-primary btn-default">Try to Get Secret Stuff</button>
+    <p id="secret"></p>
+  </div>
+</div>
+
+<script src="assets/js/jquery-2.2.0.min.cache.js"></script>
+<script src="assets/js/bootstrap-3.3.6.min.cache.js"></script>
+<script type="application/javascript">
+  var loginJson;
+  var windowId;
+
+  /**
+   * Ask the server whether we have authenticated, and show/hide/etc.
+   * portions of our page based on the status.
+   */
+  function checkLogin() {
+    $.ajax({
+      url: "login-status",
+      dataType: "json"
+    }).done(function(json) {
+      loginJson = json;
+      if (loginJson.authenticated) {
+        $(".show-if-noauth").hide();
+        $(".show-if-auth").show();
+        $(".user-display-name").text(loginJson.userDisplayName);
+        $("#logoutButton").click(logout);
+      } else {
+        $(".show-if-noauth").show();
+        $(".show-if-auth").hide();
+        $("#loginButton").click(login);
+      }
+    });
+  }
+
+  /**
+   * Send the browser to the centralized login page, preserving the
+   * current page in the history (so the user can go back from the
+   * login if they change their mind).
+   */
+  function login() {
+    window.location.href = loginJson.loginUrl + "&to=" + encodeURIComponent(window.location);
+  }
+
+  /**
+   * Send the browser to the local logout page, replacing the current
+   * page in the history (so they can't go back and view the contents
+   * after logout. The local logout will redirect us to the centralized
+   * logout.
+   */
+  function logout() {
+    window.location.replace("logout?from=" + encodeURIComponent(window.location));
+  }
+
+  function initializeWindowId() {
+    var id = window.name;
+    if (id.lastIndexOf("windowId:", 0) === 0) {
+      windowId = id.substring(9);
+    } else {
+      windowId = Math.floor(Math.random()*1e16).toString(36).slice(0, 8);
+      window.name = "windowId:" + windowId;
+    }
+  }
+
+  $(function() {
+    initializeWindowId();
+
+    $.ajaxSetup({
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("X-WINDOW-ID", windowId);
+        document.cookie.split(';').forEach(function(s) {
+          if (s.startsWith("XSRF-TOKEN=")) {
+            xhr.setRequestHeader("X-XSRF-TOKEN", s.substr(11));
+          }
+        });
+      }
+    });
+    $(document).ajaxError(function(event, xhr, settings, error) {
+      if (xhr.status == 401) {
+        login();
+      } else {
+        alert("Error: " + xhr.status + ": " + error);
+      }
+    });
+
+    checkLogin();
+
+    $("#secretButton").click(function() {
+      $("#secret").load("secret");
+    });
+    $("#public").load("public");
+  });
+</script>
+</body>
+</html>

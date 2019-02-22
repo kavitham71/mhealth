@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mhealth-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "mhealth-ip"
+    ingress.gcp.kubernetes.io/pre-shared-cert: "mhealth-mhc-new"
+    kubernetes.io/ingress.allow-http: "false"
+spec:
+  rules:
+  - host: mhc-new.stanford.edu
+    http:
+      paths:
+      - path: /23andme/*
+        backend:
+          serviceName: mhealth-23andme
+          servicePort: 9090

@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: basic-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "mhealth-dev-ip"
+    ingress.gcp.kubernetes.io/pre-shared-cert: "mhealth"
+spec:
+  rules:
+  - host: mhealth-dev.stanford.edu
+    http:
+      paths:
+      - path: /*
+        backend:
+          serviceName: mhealth-access
+          servicePort: 8007
+      - path: /researcher/*
+        backend:
+          serviceName: mhealth-access
+          servicePort: 8007
+      - path: /mhc-beta/*
+        backend:
+          serviceName: mhealth
+          servicePort: 8080
+      - path: /researcherApi/*
+        backend:
+          serviceName: mhealth-data
+          servicePort: 8006
+      - path: /23andme/*
+        backend:
+          serviceName: mhealth-23andme
+          servicePort: 8001
+      - path: /participant-beta/*
+        backend:
+          serviceName: mypart
+          servicePort: 8003
